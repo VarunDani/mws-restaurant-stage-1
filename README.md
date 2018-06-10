@@ -24,5 +24,17 @@ In a terminal, check the version of Python you have: `python -V`. If you have Py
 
 Most of the code in this project has been written to the ES6 JavaScript specification for compatibility with modern web browsers and future proofing JavaScript code. As much as possible, try to maintain use of ES6 in any additional JavaScript you write. 
 
+### Responsive Images
+To generate responsive Images use Grunt File and grunt Command for generating source set for project.
+
+	   npm install mandatory before applying grunt command
+      "grunt" alone creates a new, completed images directory
+      "grunt clean" removes the images directory
+      "grunt responsive_images" re-processes images without removing the old 
+
+### References
+
+ - Code Base, Udacity Repository ([mws-restaurant-stage-1](https://github.com/udacity/mws-restaurant-stage-1))
+ -  Responsive Images, Udacity Repository ([responsive-images](https://github.com/udacity/responsive-images))
 
 
