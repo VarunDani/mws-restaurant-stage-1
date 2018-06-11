@@ -17,21 +17,25 @@
   </header>
 
   <main id="maincontent">
-    <section id="map-container">
+    <section id="map-container" aria-labelledby="indx-map-label">
       <div id="map"></div>
     </section>
+    <label id="indx-map-label" class="aria-label-names">Google Map for All Restaurant</label>
+    
     <section>
       <div class="filter-options">
         <div class="filter-flex-wrap">
           <h2>Filter Results</h2>
           <!-- First Select -->
-          <select id="neighborhoods-select" name="neighborhoods" onchange="updateRestaurants()">
+          <select id="neighborhoods-select" name="neighborhoods" onchange="updateRestaurants()" aria-labelledby="nbrhd-label">
             <option value="all">All Neighborhoods</option>
           </select>
+          <label id="nbrhd-label" class="aria-label-names">By Neighborhoods</label>
           <!-- Second Select -->
-          <select id="cuisines-select" name="cuisines" onchange="updateRestaurants()">
+          <select id="cuisines-select" name="cuisines" onchange="updateRestaurants()" aria-labelledby="cusn-label">
             <option value="all">All Cuisines</option>
           </select>
+          <label id="cusn-label" class="aria-label-names">By Cuisines</label>
         </div>
       </div>
       <ul id="restaurants-list"></ul>

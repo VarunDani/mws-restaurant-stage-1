@@ -12,7 +12,7 @@ body {
 	position:relative;
   margin-left: auto;
   margin-right: auto;
-	max-width: 1050px;
+	max-width: 1080px;
 }
 ul, li {
 	font-family: Arial, Helvetica, sans-serif;
@@ -32,7 +32,7 @@ a img{
 h1, h2, h3, h4, h5, h6 {
   font-family: Arial, Helvetica, sans-serif;
   margin: 0 0 20px;
-	max-width: 1050px;
+	max-width: 1080px;
 }
 article, aside, canvas, details, figcaption, figure, footer, header, hgroup, menu, nav, section {
 	display: block;
@@ -163,7 +163,8 @@ nav h1 a {
   min-height: 250px;
   padding: 0 20px 20px;
   text-align: left;
-  width: 260px;
+	min-width: 230px;
+  max-width: 260px;
 }
 #restaurants-list li h2 {
 	padding-top: 20px;
@@ -174,7 +175,6 @@ nav h1 a {
   display: block;
   margin: 0;
   max-width: 100%;
-  min-height: 250px;
   min-width: 100%;
 	overflow: hidden;
 }
@@ -326,7 +326,7 @@ nav h1 a {
 }
 #restaurant-hours {
   width: 100%;
-  max-width: 1050px;
+  max-width: 1080px;
 	margin-top: 25px;
 }
 
@@ -346,4 +346,19 @@ nav h1 a {
 	#restaurants-list li h2 {
 		font-size: 1em;
 	}
+}
+@media only screen and (min-width: 0px) {
+  #restaurants-list li {
+    max-width: 100%;
+  }
+}
+@media only screen and (min-width: 786px) {
+  #restaurants-list li {
+    max-width: 40%;
+  }
+}
+@media only screen and (min-width: 1050px) {
+  #restaurants-list li {
+    max-width: 260px;
+  }
 }

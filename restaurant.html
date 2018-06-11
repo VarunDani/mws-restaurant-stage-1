@@ -18,10 +18,14 @@
     <nav>
       <h1><a href="/">Restaurant Reviews</a></h1>
     </nav>
-    <!-- Beginning breadcrumb -->
-    <ul id="breadcrumb" >
-      <li><a href="/">Home</a></li>
-    </ul>
+    <nav aria-labelledby="brdcrum-label">
+      <!-- Beginning breadcrumb -->
+      <ul id="breadcrumb"  >
+        <li><a href="/">Home</a></li>
+      </ul>
+    </nav>
+    <label id="brdcrum-label" class="aria-label-names">Breadcrumb</label>
+
     <!-- End breadcrumb -->
     <!-- End nav -->
   </header>
@@ -37,14 +41,17 @@
     </section>
 
     <section id="restaurant-details">
-        <p id="restaurant-address"></p>
+        <p id="restaurant-address" aria-labelledby="address-label"></p>
+        <label id="address-label" class="aria-label-names">Address</label>
         <!-- Beginning map -->
-        <section id="map-container">
+        <section id="map-container" aria-labelledby="map-label">
           <div id="map"></div>
         </section>
+        <label id="map-label" class="aria-label-names">Google Map for Restaurant</label>
         <!-- End map -->
         <div class="hours-section">
-          <table id="restaurant-hours"></table>
+          <table id="restaurant-hours" aria-labelledby="hours-label"></table>
+          <label id="hours-label" class="aria-label-names">Opening hours for Restaurent</label>
         </div>
      </section>
 
