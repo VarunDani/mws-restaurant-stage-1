@@ -113,11 +113,11 @@ nav h1 a {
 /* ====================== Restaurant Filtering ====================== */
 .filter-options {
   width: 100%;
-  background-color: #3397DB;
+  background-color: #235f87;
   align-items: center;
 }
 .filter-options h2 {
-  color: white;
+  color: #fff;
   font-size: 1rem;
   font-weight: normal;
   line-height: 1;
@@ -206,7 +206,7 @@ nav h1 a {
 }
 /* Button instead of using anchor tag */
 #restaurants-list li button {
-  background-color: #c17c05;
+  background-color: #724702;
   border: 3px solid #eee;
   color: #fff;
   font-size: 12pt;
