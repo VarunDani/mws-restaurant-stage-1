@@ -38,4 +38,4 @@ To generate responsive Images use Grunt File and grunt Command for generating so
  -  Responsive Images, Udacity Repository ([responsive-images](https://github.com/udacity/responsive-images))
  -  Service Worker and Code Reference, Repository ([wittr] (https://github.com/jakearchibald/wittr))
  -  ARIA Breadcrumb section change according to review ([W3 reference link](https://www.w3.org/TR/wai-aria-practices-1.1/examples/breadcrumb/index.html))
- -  Skip Content added for accessibility accrding to review ([Ref]())
+ -  Skip Content added for accessibility accrding to review ([Ref](http://terrillthompson.com/blog/161))
