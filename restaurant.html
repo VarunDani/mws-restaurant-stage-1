@@ -20,14 +20,12 @@
     <nav>
       <h1><a href="/">Restaurant Reviews</a></h1>
     </nav>
-    <nav aria-labelledby="brdcrum-label">
+    <nav aria-label="Breadcrumb">  <!-- Reference: https://www.w3.org/TR/wai-aria-practices-1.1/examples/breadcrumb/index.html -->
       <!-- Beginning breadcrumb -->
-      <ul id="breadcrumb"  >
+      <ul id="breadcrumb" >
         <li><a href="/">Home</a></li>
       </ul>
     </nav>
-    <label id="brdcrum-label" class="aria-label-names">Breadcrumb</label>
-
     <!-- End breadcrumb -->
     <!-- End nav -->
   </header>
@@ -42,11 +40,12 @@
       <p id="restaurant-cuisine"></p>
     </section>
 
+  <a href="#reviews-container" class="skip-map-navigations"> Skip Map and move to Restaurant Details </a>
     <section id="restaurant-details">
         <p id="restaurant-address" aria-labelledby="address-label"></p>
         <label id="address-label" class="aria-label-names">Address</label>
         <!-- Beginning map -->
-        <section id="map-container" aria-labelledby="map-label">
+        <section id="map-container" role="application" aria-labelledby="map-label">
           <div id="map"></div>
         </section>
         <label id="map-label" class="aria-label-names">Google Map for Restaurant</label>

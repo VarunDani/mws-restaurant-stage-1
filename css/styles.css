@@ -334,7 +334,11 @@ nav h1 a {
 .aria-label-names {
  display: none;
 }
-
+.skip-map-navigations {
+  position: absolute;
+  top: -100px;
+  left: -100px;
+}
 /* ================Media Queries ================*/
 
 /* For header font size */

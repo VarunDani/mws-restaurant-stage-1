@@ -153,7 +153,15 @@ createReviewHTML = (review) => {
 fillBreadcrumb = (restaurant=self.restaurant) => {
   const breadcrumb = document.getElementById('breadcrumb');
   const li = document.createElement('li');
-  li.innerHTML = restaurant.name;
+
+  //Changing acording to ARIA Ref: https://www.w3.org/TR/wai-aria-practices-1.1/examples/breadcrumb/index.html
+  const anchorInside = document.createElement("a");
+  anchorInside.href = window.location;
+  anchorInside.innerHTML = restaurant.name;
+  anchorInside.setAttribute("aria-current", "page");
+  //Have to append this to main li tag
+  li.appendChild(anchorInside);
+  //append li to main breadcrumb
   breadcrumb.appendChild(li);
 }
 
