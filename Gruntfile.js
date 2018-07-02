@@ -13,25 +13,25 @@ module.exports = function(grunt) {
       dev: {
         options: {
           sizes: [{
-            width: 300,
+            width: 150,
 			rename:false,
 			suffix: '_small_2x',
-            quality:40
+            quality:20
           },
 		  {
-            width: 300,
+            width: 150,
 			rename:false,
 			suffix: '_small_1x',
             quality:20
           },
 		  {
-            width: 800,
+            width: 700,
 			rename:false,
 			suffix: '_large_2x',
-            quality:40
+            quality:20
           },
 		  {
-            width: 800,
+            width: 700,
 			rename:false,
 			suffix: '_large_1x',
             quality:20

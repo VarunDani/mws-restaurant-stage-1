@@ -8,14 +8,14 @@ class DBHelper {
    * Change this to restaurants.json file location on your server.
    */
   static get DATABASE_URL() {
-    const port = 8000 // Change this to your server port
-    return `http://localhost:${port}/data/restaurants.json`;
+    const port = 1337 // Change this to your server port
+    return `http://localhost:${port}/restaurants`;//Changed according to new server
   }
 
   /**
    * Fetch all restaurants.
    */
-  static fetchRestaurants(callback) {
+  /* static fetchRestaurants(callback) {
     let xhr = new XMLHttpRequest();
     xhr.open('GET', DBHelper.DATABASE_URL);
     xhr.onload = () => {
@@ -29,12 +29,29 @@ class DBHelper {
       }
     };
     xhr.send();
+  } */
+
+  /**
+   * Fetch all restaurants - Fetch API
+   */
+  static fetchRestaurants(callback) {
+    let url = DBHelper.DATABASE_URL;
+    fetch(url, { method: "GET" })
+        .then(response => {
+          response.json().then(restaurants => {
+            callback(null,restaurants);
+          });
+        })
+        .catch(error => {
+          callback(`Problem in Requesting Restaurents having ${error}`, null);
+        });
   }
+
 
   /**
    * Fetch a restaurant by its ID.
    */
-  static fetchRestaurantById(id, callback) {
+  /* static fetchRestaurantById(id, callback) {
     // fetch all restaurants with proper error handling.
     DBHelper.fetchRestaurants((error, restaurants) => {
       if (error) {
@@ -48,6 +65,22 @@ class DBHelper {
         }
       }
     });
+  } */
+
+  /**
+   * Fetch a restaurant by its ID - Fetch API
+   */
+  static fetchRestaurantById(id, callback) {
+    let url = DBHelper.DATABASE_URL+"/"+id;
+    fetch(url, { method: "GET" })
+        .then(response => {
+          response.json().then(restaurant => {
+            callback(null,restaurant);
+          });
+        })
+        .catch(error => {
+          callback(`Problem in Requesting Restaurent by ID having Error: ${error}`, null);
+        });
   }
 
   /**
@@ -150,7 +183,9 @@ class DBHelper {
    * Restaurant image URL.
    */
   static imageUrlForRestaurant(restaurant) {
-    return (`/images/${restaurant.photograph}`);
+    if(restaurant.photograph)
+      return (`/images/${restaurant.photograph}`);
+    return (`/images/${restaurant.id}`);
   }
 
   /**

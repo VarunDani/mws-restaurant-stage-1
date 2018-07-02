@@ -144,13 +144,14 @@ createRestaurantHTML = (restaurant) => {
   //Have to change URL to Load Images according to sizes
 
   const imgName = imageURLOld.split('.');
-  const small_1x_url = imgName[0] + '_small_1x.' + imgName[1];
-  const large_2x_url = imgName[0] + '_large_2x.' + imgName[1];
+  const ext = imgName[1] ? imgName[1] : "jpg";//Getting No data about ext
+  const small_1x_url = imageURLOld + '_small_1x.' + ext;
+  const large_2x_url = imageURLOld + '_large_2x.' + ext;
 
   //Applying it to image source
   image.src = small_1x_url;//Smaller one initially
 
-  image.srcset = `${small_1x_url} 300w, ${large_2x_url} 700w`;//Set src set for change of urls
+  image.srcset = `${small_1x_url} 300w, ${large_2x_url} 800w`;//Set src set for change of urls
   image.alt = 'Image for '+ restaurant.name + ' Restaurant';
 
   li.append(image);
