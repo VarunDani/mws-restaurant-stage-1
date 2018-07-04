@@ -151,7 +151,7 @@ createRestaurantHTML = (restaurant) => {
   //Applying it to image source
   image.src = small_1x_url;//Smaller one initially
 
-  image.srcset = `${small_1x_url} 300w, ${large_2x_url} 800w`;//Set src set for change of urls
+  image.srcset = `${small_1x_url} 300w`;//Set src set for change of urls
   image.alt = 'Image for '+ restaurant.name + ' Restaurant';
 
   li.append(image);
