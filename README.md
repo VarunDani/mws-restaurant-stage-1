@@ -1,28 +1,22 @@
+
 # Mobile Web Specialist Certification Course
 ---
 #### _Three Stage Course Material Project - Restaurant Reviews_
 
-## Project Overview: Stage 1
+## Project Overview: Stage 2
 
-For the **Restaurant Reviews** projects, you will incrementally convert a static webpage to a mobile-ready web application. In **Stage One**, you will take a static design that lacks accessibility and convert the design to be responsive on different sized displays and accessible for screen reader use. You will also add a service worker to begin the process of creating a seamless offline experience for your users.
+### Features Covered
 
-### Specification
+ - Addition of Manifest File
+ - Fetch JSON from Server  
+ - Store JSON to IndexedDB for offline purpose
+ - Improve Performance, PWA, Accessibility measures
 
-You have been provided the code for a restaurant reviews website. The code has a lot of issues. It’s barely usable on a desktop browser, much less a mobile device. It also doesn’t include any standard accessibility features, and it doesn’t work offline at all. Your job is to update the code to resolve these issues while still maintaining the included functionality. 
+### How to run
+Execute Following Command to build with gulpand start server. Execute http://localhost:8000/ to access restaurant App.
 
-### What do I do from here?
-
-1. In this folder, start up a simple HTTP server to serve up the site files on your local computer. Python has some simple tools to do this, and you don't even need to know Python. For most people, it's already installed on your computer. 
-
-In a terminal, check the version of Python you have: `python -V`. If you have Python 2.x, spin up the server with `python -m SimpleHTTPServer 8000` (or some other port, if port 8000 is already in use.) For Python 3.x, you can use `python3 -m http.server 8000`. If you don't have Python installed, navigate to Python's [website](https://www.python.org/) to download and install the software.
-
-2. With your server running, visit the site: `http://localhost:8000`, and look around for a bit to see what the current experience looks like.
-3. Explore the provided code, and make start making a plan to implement the required features in three areas: responsive design, accessibility and offline use.
-4. Write code to implement the updates to get this site on its way to being a mobile-ready website.
-
-### Note about ES6
-
-Most of the code in this project has been written to the ES6 JavaScript specification for compatibility with modern web browsers and future proofing JavaScript code. As much as possible, try to maintain use of ES6 in any additional JavaScript you write. 
+    npm install
+    gulp
 
 ### Responsive Images
 To generate responsive Images use Grunt File and grunt Command for generating source set for project.
@@ -30,7 +24,7 @@ To generate responsive Images use Grunt File and grunt Command for generating so
 	   npm install mandatory before applying grunt command
       "grunt" alone creates a new, completed images directory
       "grunt clean" removes the images directory
-      "grunt responsive_images" re-processes images without removing the old 
+      "grunt responsive_images" re-processes images without removing the old
 
 ### References
 
@@ -39,3 +33,7 @@ To generate responsive Images use Grunt File and grunt Command for generating so
  -  Service Worker and Code Reference, Repository ([wittr] (https://github.com/jakearchibald/wittr))
  -  ARIA Breadcrumb section change according to review ([W3 reference link](https://www.w3.org/TR/wai-aria-practices-1.1/examples/breadcrumb/index.html))
  -  Skip Content added for accessibility accrding to review ([Ref](http://terrillthompson.com/blog/161))
+ - Fetch API Documentation ([Ref](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API))
+ - IndexedDB Documentation ([Ref](https://developers.google.com/web/ilt/pwa/working-with-indexeddb))
+ - Error Resolution for Quota Exceeded ([Ref](https://stackoverflow.com/questions/21159301/quotaexceedederror-dom-exception-22-an-attempt-was-made-to-add-something-to-st))
+ - Yeoman generator for gulp, ([3oilerplate](https://www.npmjs.com/package/generator-3oilerplate))
