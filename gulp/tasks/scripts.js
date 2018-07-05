@@ -10,7 +10,8 @@ var pump = require('pump');
 gulp.task('scriptFiles', (cb) => {
     pump([
         gulp.src(['./js/*.js']),
-        uglify(),
+        //uglify(),
+        //See this problem afterwards Error in uglify so not building 
         gulp.dest('./dist/js/')
     ], cb);
 });

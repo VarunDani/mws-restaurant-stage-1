@@ -3,6 +3,20 @@
  */
 class DBHelper {
 
+//var dbPromise = idb.open('mws_restaurants_info', 1, function(upgradeDb) {
+//Not using direct variable - using static method instead
+  static getRestaurantDB() {
+      return idb.open('mws_restaurants_info', 1, upgradeDb => {
+        //Upgrade DB if version mismatch
+        switch(upgradeDb.oldVersion) {
+          case 0:
+            if(!upgradeDb.objectStoreNames.contains('restaurants_mst')){
+              var restStore = upgradeDb.createObjectStore('restaurants_mst', { keyPath: 'id' });
+            }
+        }
+      });
+  }
+
   /**
    * Database URL.
    * Change this to restaurants.json file location on your server.
@@ -37,13 +51,29 @@ class DBHelper {
   static fetchRestaurants(callback) {
     let url = DBHelper.DATABASE_URL;
     fetch(url, { method: "GET" })
-        .then(response => {
-          response.json().then(restaurants => {
-            callback(null,restaurants);
+        .then(response => response.json())
+        //Put All Restaurents in Store
+        .then(restaurants => {
+          //console.log('list of restaurents fetched '+restaurants);
+          let dbPromise = DBHelper.getRestaurantDB();
+          dbPromise.then(function(db) {
+            if (!db) return callback(null, restaurants);
+            let transaction = db.transaction('restaurants_mst', 'readwrite');
+            let allRestaurents = transaction.objectStore('restaurants_mst');
+            restaurants.forEach(rst => allRestaurents.put(rst));
           });
+          callback(null, restaurants);
         })
+        //In case of Problem in Fetching from Network
         .catch(error => {
-          callback(`Problem in Requesting Restaurents having ${error}`, null);
+          console.log('Getting All Restaurents From Cache Storage: '+error);
+          DBHelper.getAllCachedRestaurants(null).then(allRestaurents => {
+            //console.log('allRestaurents'+allRestaurents);
+              if (allRestaurents.length > 0) return callback(null, allRestaurents);
+            }).catch((err) => {
+              console.log('Problem in getting Cached Restaurents ');
+              callback(error, null);
+            });
         });
   }
 
@@ -73,13 +103,27 @@ class DBHelper {
   static fetchRestaurantById(id, callback) {
     let url = DBHelper.DATABASE_URL+"/"+id;
     fetch(url, { method: "GET" })
-        .then(response => {
-          response.json().then(restaurant => {
-            callback(null,restaurant);
+        .then(response => response.json())
+        //Put Restaurents in Store
+        .then(restaurant => {
+          let dbPromise = DBHelper.getRestaurantDB();
+          dbPromise.then(function(db) {
+            if(!db) return callback(null, restaurant);
+            let transaction = db.transaction('restaurants_mst', 'readwrite');
+            let allRestaurents = transaction.objectStore('restaurants_mst');
+            allRestaurents.put(restaurant);
           });
+          callback(null, restaurant);
         })
+        //In case of Problem in Fetching from Network
         .catch(error => {
-          callback(`Problem in Requesting Restaurent by ID having Error: ${error}`, null);
+          console.log('Getting Specific Restaurant From Cache Storage');
+          DBHelper.getAllCachedRestaurants(id).then(rest => {
+              if (rest) return callback(null, rest);
+            }).catch((err) => {
+              console.log('Problem in getting Restaurent from Cache storage ');
+              callback(error, null);
+            });
         });
   }
 
@@ -201,5 +245,28 @@ class DBHelper {
     );
     return marker;
   }
+
+// -------------------  DB Utility Methods ------------------- START
+  /**
+   * Get All Restaurents From Cache Storage .
+   * One method will serve to both with and without ID requests here
+   */
+  static getAllCachedRestaurants(id) {
+    //console.log('getAllCachedRestaurants');
+    let dbPromise = DBHelper.getRestaurantDB();
+    //Obtaining Result
+    let res = dbPromise.then(function(db) {
+      if(!db) return;
+      let transaction = db.transaction('restaurants_mst');
+      let allRestaurents = transaction.objectStore('restaurants_mst');
+      return id!==null ? allRestaurents.get(Number(id)) : allRestaurents.getAll();
+    }).catch((err) => {
+      console.log('Problem in Getting All Restaurents '+err);
+    });
+  //Returning All Records
+  //console.log('getAllCachedRestaurants'+res);
+  return res;
+ }
+// -------------------  DB Utility Methods ------------------- END
 
 }

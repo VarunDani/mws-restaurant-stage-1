@@ -10,10 +10,21 @@ self.addEventListener('install', function(event) {
         '/js/mainController.js',
         '/js/restaurant_info.js',
         '/js/dbhelper.js',
+        '/js/idb.js',
         '/css/styles.css',
         '/images/',
         '/restaurant.html',
-        '/manifest.json'
+        '/manifest.json',
+        '/images/1_small_1x.jpg',
+        '/images/2_small_1x.jpg',
+        '/images/3_small_1x.jpg',
+        '/images/4_small_1x.jpg',
+        '/images/5_small_1x.jpg',
+        '/images/6_small_1x.jpg',
+        '/images/7_small_1x.jpg',
+        '/images/8_small_1x.jpg',
+        '/images/9_small_1x.jpg',
+        '/images/10_small_1x.jpg'
       ]);
     })
   );
@@ -47,6 +58,8 @@ self.addEventListener('fetch', function(event) {
             return caches.open(staticCacheID).then(cache => {
               cache.put(event.request, fetchResponse.clone());
               return fetchResponse;
+            }).catch((err) => {
+              console.log('sw: '+err);
             });
           });
     })
