@@ -3,7 +3,7 @@
 ---
 #### _Three Stage Course Material Project - Restaurant Reviews_
 
-## Project Overview: Stage 2
+## Project Overview: Stage 3
 
 ### Features Covered
 
@@ -11,6 +11,8 @@
  - Fetch JSON from Server  
  - Store JSON to IndexedDB for offline purpose
  - Improve Performance, PWA, Accessibility measures
+ - Added Reviews Form (Works offline and Sync on Network Connection)
+ - Can Mark Restaurant Favorite (Works offline and Sync on Network Connection)
 
 ### How to run
 Execute Following Command to build with gulpand start server. Execute http://localhost:8000/ to access restaurant App.
@@ -37,3 +39,6 @@ To generate responsive Images use Grunt File and grunt Command for generating so
  - IndexedDB Documentation ([Ref](https://developers.google.com/web/ilt/pwa/working-with-indexeddb))
  - Error Resolution for Quota Exceeded ([Ref](https://stackoverflow.com/questions/21159301/quotaexceedederror-dom-exception-22-an-attempt-was-made-to-add-something-to-st))
  - Yeoman generator for gulp, ([3oilerplate](https://www.npmjs.com/package/generator-3oilerplate))
+ - Snack Bar reference Code For Notification ([W3School](https://www.w3schools.com/howto/howto_js_snackbar.asp))
+ - IDB Code Help ([IDBPromise](https://github.com/jakearchibald/idb))
+ - Website Sync Article (Great Examples!) ([WICG](https://github.com/WICG/BackgroundSync/blob/master/explainer.md))

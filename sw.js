@@ -1,3 +1,6 @@
+importScripts('/js/idb.js');
+importScripts('/js/DBHelper.js');
+
 var staticCacheID = 'mws-project-1-content-cache-v1';
 
 self.addEventListener('install', function(event) {
@@ -12,6 +15,7 @@ self.addEventListener('install', function(event) {
         '/js/dbhelper.js',
         '/js/idb.js',
         '/css/styles.css',
+        '/css/restDtls.css',
         '/images/',
         '/restaurant.html',
         '/manifest.json',
@@ -64,4 +68,13 @@ self.addEventListener('fetch', function(event) {
           });
     })
   );
+});
+
+//Background Sync Event
+self.addEventListener('sync', function(event) {
+  if (event.tag === 'syncApp'){
+    console.log("Start Syncing Application Data");
+    event.waitUntil(DBHelper.syncPendingReviews());
+  }
+
 });

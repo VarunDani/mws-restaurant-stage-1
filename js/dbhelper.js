@@ -6,12 +6,21 @@ class DBHelper {
 //var dbPromise = idb.open('mws_restaurants_info', 1, function(upgradeDb) {
 //Not using direct variable - using static method instead
   static getRestaurantDB() {
-      return idb.open('mws_restaurants_info', 1, upgradeDb => {
+      return idb.open('mws_restaurants_info', 3, upgradeDb => {
         //Upgrade DB if version mismatch
         switch(upgradeDb.oldVersion) {
           case 0:
             if(!upgradeDb.objectStoreNames.contains('restaurants_mst')){
               var restStore = upgradeDb.createObjectStore('restaurants_mst', { keyPath: 'id' });
+            }
+          case 1:
+            if(!upgradeDb.objectStoreNames.contains('reviews_mst')){
+              var reviewStore = upgradeDb.createObjectStore('reviews_mst', { keyPath: 'id' });
+              var reviewIndexByRest = reviewStore.createIndex('group_by_restaurant', 'restaurant_id', {unique: false});
+            }
+          case 2:
+            if(!upgradeDb.objectStoreNames.contains('pending_review_transactions')){
+              var restStore = upgradeDb.createObjectStore('pending_review_transactions', { autoIncrement: true  });
             }
         }
       });
@@ -23,7 +32,35 @@ class DBHelper {
    */
   static get DATABASE_URL() {
     const port = 1337 // Change this to your server port
-    return `http://localhost:${port}/restaurants`;//Changed according to new server
+    return `http://localhost:${port}`;//Changed according to new server
+  }
+
+  /**
+   * Get Restaurant URL.
+   */
+  static get RESTAURANT_URL() {
+    return DBHelper.DATABASE_URL+"/restaurants";
+  }
+
+  /**
+   * Creating Restaurant URL By ID.
+   */
+  static RESTAURANT_URL_BY_ID(id) {
+    return DBHelper.RESTAURANT_URL+"/"+id;
+  }
+
+  /**
+   * Creating Restaurant URL By ID.
+   */
+  static RESTAURANT_GET_REVIEW(id) {
+    return DBHelper.DATABASE_URL+"/reviews/?restaurant_id="+id;
+  }
+
+  /**
+   * Post Review For Restaurant.
+   */
+  static get RESTAURANT_POST_REVIEW() {
+    return DBHelper.DATABASE_URL+"/reviews/";
   }
 
   /**
@@ -49,7 +86,7 @@ class DBHelper {
    * Fetch all restaurants - Fetch API
    */
   static fetchRestaurants(callback) {
-    let url = DBHelper.DATABASE_URL;
+    let url = DBHelper.RESTAURANT_URL;
     fetch(url, { method: "GET" })
         .then(response => response.json())
         //Put All Restaurents in Store
@@ -101,7 +138,7 @@ class DBHelper {
    * Fetch a restaurant by its ID - Fetch API
    */
   static fetchRestaurantById(id, callback) {
-    let url = DBHelper.DATABASE_URL+"/"+id;
+    let url = DBHelper.RESTAURANT_URL_BY_ID(id);
     fetch(url, { method: "GET" })
         .then(response => response.json())
         //Put Restaurents in Store
@@ -267,6 +304,152 @@ class DBHelper {
   //console.log('getAllCachedRestaurants'+res);
   return res;
  }
+
+ /**
+  * Fetch a Review By Restaurant ID - Fetch API
+  */
+ static fetchReviewsById(id, callback) {
+   let url = DBHelper.RESTAURANT_GET_REVIEW(id);
+   fetch(url, { method: "GET" })
+       .then(response => response.json())
+       //Put Reviews in Store on success
+       .then(allReviews => {
+         let dbPromise = DBHelper.getRestaurantDB();
+         dbPromise.then(function(db) {
+           if(!db) return callback(null, allReviews);
+           let transaction = db.transaction('reviews_mst', 'readwrite');
+           let reviewStore = transaction.objectStore('reviews_mst');
+           allReviews.forEach(rev => reviewStore.put(rev));
+         });
+         callback(null, allReviews);
+       })
+       //In case of Problem in Fetching from Network
+       .catch(error => {
+         console.log('Getting Review From Cache Storage');
+         DBHelper.getAllCachedReviews(id).then(rev => {
+             if (rev) return callback(null, rev);
+           }).catch((err) => {
+             console.log('Problem in getting Reviews from Cache storage ');
+             callback(error, null);
+           });
+       });
+ }
+
+
+ /**
+  * Get Review For Restaurant from Cache Storage.
+  * One method will serve to both with and without ID requests here
+  */
+ static getAllCachedReviews(id) {
+   let dbPromise = DBHelper.getRestaurantDB();
+   //Obtaining Result
+   let res = dbPromise.then(function(db) {
+     let transaction = db.transaction('reviews_mst');
+     let allReviews = transaction.objectStore('reviews_mst');
+     return id!==null ? allReviews.index("group_by_restaurant").get(id) : allReviews.getAll();
+   }).catch((err) => {
+     console.log('Problem in Getting Reviews for Restaurents '+err);
+   });
+ return res;
+ }
+
+ /**
+  * Save Review To Server .
+  * This will first try to post review on server
+  * If connectivity is not available, it will store review locally
+  */
+static saveReview(restaurant_id, name, rating, comments, date,callback){
+  let url = DBHelper.RESTAURANT_POST_REVIEW;
+  //Make Review Object
+  let review = {
+    restaurant_id : restaurant_id,
+    name : name,
+    rating : rating,
+    comments : comments
+  };
+  //Post request to Server
+  fetch(url, {
+    method: 'POST',
+    body: JSON.stringify(review)
+  })
+  .then(response => response.json())
+  //If review is stored on server successfull,
+  // save to local review storage as well
+  .then(response => {
+    let dbPromise = DBHelper.getRestaurantDB();
+    dbPromise.then(function(db) {
+      if(!db) return callback(null, response);
+      let transaction = db.transaction('reviews_mst', 'readwrite');
+      let reviewStore = transaction.objectStore('reviews_mst');
+      reviewStore.put(response);
+      return transaction.complete;
+    });
+    callback(null, response);
+  })
+  //If Review Not added to Server because of Connection Error,
+  // Add it to Pending Store.
+  .catch((err) => {
+    let dbPromise = DBHelper.getRestaurantDB();
+    dbPromise.then(db => {
+       if (!db) return;
+       let transaction = db.transaction('pending_review_transactions', 'readwrite');
+       let store = transaction.objectStore('pending_review_transactions');
+       review["createdAt"] = date;
+       review["updatedAt"] = date;
+       store.put(review);
+       return transaction.complete;
+    });
+    callback(err, null);
+  });
+}
+
+
+/**
+ * This method will fetch reviews from local store,
+ *  and post it to server, follows cycle of saveReview if failed again.
+ */
+static syncPendingReviews() {
+  let dbPromise = DBHelper.getRestaurantDB();
+  //Obtaining Result
+  let res = dbPromise.then(function(db) {
+    let transaction = db.transaction('pending_review_transactions', 'readwrite');
+    let reviewStore = transaction.objectStore('pending_review_transactions');
+    let reviews = reviewStore.getAll();
+    //Clear from local store
+    reviewStore.clear();
+    return reviews;
+  })
+  .then((pendingReviews) => {
+
+    console.log("Uploading pending Reviews ");
+    pendingReviews.forEach(review => {
+      DBHelper.saveReview(review.restaurant_id, review.name,
+                            review.rating, review.comments,
+                            review.date, (error, response) => {
+      // Is it possible that error occur even after getting connection ??
+        if (error) {
+          console.log(":: Enable background sync again ::");
+          navigator.serviceWorker.ready.then(function(registration) {
+            registration.sync.register('syncApp').then(function() {
+              console.log("Registration of it successfull");
+            }, function() {
+              // Registration failed
+              console.log("Problem in Registration of background sync ");
+            });
+        });
+      }
+    });//End-saveReview
+  });//End-forEach
+
+  })
+  .catch((err) => {
+    console.log('Problem in Review Sync: '+err);
+  });
+return res;
+}
+
+
+
 // -------------------  DB Utility Methods ------------------- END
 
 }
