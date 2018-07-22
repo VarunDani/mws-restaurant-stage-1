@@ -6,7 +6,7 @@ class DBHelper {
 //var dbPromise = idb.open('mws_restaurants_info', 1, function(upgradeDb) {
 //Not using direct variable - using static method instead
   static getRestaurantDB() {
-      return idb.open('mws_restaurants_info', 3, upgradeDb => {
+      return idb.open('mws_restaurants_info', 4, upgradeDb => {
         //Upgrade DB if version mismatch
         switch(upgradeDb.oldVersion) {
           case 0:
@@ -21,6 +21,10 @@ class DBHelper {
           case 2:
             if(!upgradeDb.objectStoreNames.contains('pending_review_transactions')){
               var restStore = upgradeDb.createObjectStore('pending_review_transactions', { autoIncrement: true  });
+            }
+          case 3:
+            if(!upgradeDb.objectStoreNames.contains('pending_favorite_transactions')){
+              var favStore = upgradeDb.createObjectStore('pending_favorite_transactions', { keyPath: 'id' });
             }
         }
       });
@@ -63,6 +67,12 @@ class DBHelper {
     return DBHelper.DATABASE_URL+"/reviews/";
   }
 
+  /**
+   * Post Review For Restaurant.
+   */
+  static RESTAURANT_MARK_FAVORITE(id, favorite) {
+    return DBHelper.DATABASE_URL+"/restaurants/"+id+"/?is_favorite="+favorite;
+  }
   /**
    * Fetch all restaurants.
    */
@@ -428,15 +438,7 @@ static syncPendingReviews() {
                             review.date, (error, response) => {
       // Is it possible that error occur even after getting connection ??
         if (error) {
-          console.log(":: Enable background sync again ::");
-          navigator.serviceWorker.ready.then(function(registration) {
-            registration.sync.register('syncApp').then(function() {
-              console.log("Registration of it successfull");
-            }, function() {
-              // Registration failed
-              console.log("Problem in Registration of background sync ");
-            });
-        });
+          DBHelper.enableBackgroundSync();
       }
     });//End-saveReview
   });//End-forEach
@@ -449,7 +451,104 @@ return res;
 }
 
 
+/**
+ * This method will put restaurant as favorite,
+ *  Also Update cached entry and put in pending if failed
+ */
+static markRestaurantFavorite(restaurant ,callback){
+  let url = DBHelper.RESTAURANT_MARK_FAVORITE(restaurant.id, restaurant.is_favorite);
+  //Put request to Server
+  fetch(url, {method: 'PUT'})
+  .then(response => response.json())
+  .then(response => {
+    //Update Cached Restaurant
+    let dbPromise = DBHelper.getRestaurantDB();
+    let res = dbPromise.then(function(db) {
+      if(!db) return;
+      let transaction = db.transaction('restaurants_mst', 'readwrite');
+      let restStore = transaction.objectStore('restaurants_mst');
+      restStore.put(restaurant);
+      return transaction.complete;
+    }).catch((err) => {
+      console.log('Problem in Updating Cached Restaurant '+err);
+    });
+    callback(null, response);
+  })
+  //Add to Pending favorite transactions
+  .catch((err) => {
+    let dbPromise = DBHelper.getRestaurantDB();
+    dbPromise.then(db => {
+       if (!db) return;
+       let transaction = db.transaction('pending_favorite_transactions', 'readwrite');
+       let store = transaction.objectStore('pending_favorite_transactions');
+       // let favObj = { //Make object for inserting to DB
+       //   id : restaurant.id,
+       //   favorite : restaurant.is_favorite
+       // };
+       store.put(restaurant);
+       return transaction.complete;
+    });
+    callback(err, null);
+  });
+}
+
+/**
+ * This method will fetch favourite data from local store,
+ *  and post it to server, follows cycle of markRestaurantFavorite if failed again.
+ */
+static syncPendingFavorite() {
+  let dbPromise = DBHelper.getRestaurantDB();
+  //Obtaining Result
+  let res = dbPromise.then(function(db) {
+    let transaction = db.transaction('pending_favorite_transactions', 'readwrite');
+    let favStore = transaction.objectStore('pending_favorite_transactions');
+    let favourites = favStore.getAll();
+    //Clear from local store
+    favStore.clear();
+    return favourites;
+  })
+  .then((pendingFavourites) => {
+    console.log("Updating pending Favorite ");
+    pendingFavourites.forEach(fav => {
+      DBHelper.markRestaurantFavorite(fav, (error, response) => {
+        if (error) {
+          DBHelper.enableBackgroundSync();
+      }
+    });//End-markRestaurantFavorite
+  });//End-forEach
+
+  })
+  .catch((err) => {
+    console.log('Problem in Favorite Sync: '+err);
+  });
+return res;
+}
+
 
 // -------------------  DB Utility Methods ------------------- END
+
+/**
+* Common Method Extracted for background Sync
+*/
+static enableBackgroundSync(){
+  //This is very important for background sync event
+  console.log(":: Enable background sync ::");
+  navigator.serviceWorker.ready.then(function(registration) {
+    registration.sync.register('syncApp').then(function() {
+      console.log("Registration of it successfull");
+    }, function() {
+      // Registration failed
+      console.log("Problem in Registration of background sync ");
+    });
+  });
+}
+
+/**
+ * Sync Both Review and Favorite.
+ */
+static syncPendingData(){
+    syncPendingReviews();
+    syncPendingFavorite();
+}
 
 }

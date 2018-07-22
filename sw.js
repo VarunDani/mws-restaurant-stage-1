@@ -74,7 +74,7 @@ self.addEventListener('fetch', function(event) {
 self.addEventListener('sync', function(event) {
   if (event.tag === 'syncApp'){
     console.log("Start Syncing Application Data");
-    event.waitUntil(DBHelper.syncPendingReviews());
+    event.waitUntil(DBHelper.syncPendingData());
   }
 
 });

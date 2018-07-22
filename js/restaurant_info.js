@@ -237,17 +237,7 @@ saveNewReview = () => {
       console.log("Problem in Network Connection, Adding review to Local store");
       showSnackBar("Internet Connection not found. \n"+
         "Review Added to local storage and will be sync once connected.");
-
-      //This is very important for background sync event
-      console.log(":: Enable background sync ::");
-      navigator.serviceWorker.ready.then(function(registration) {
-        registration.sync.register('syncApp').then(function() {
-          console.log("Registration of it successfull");
-        }, function() {
-          // Registration failed
-          console.log("Problem in Registration of background sync ");
-        });
-      });
+        DBHelper.enableBackgroundSync();
     }
     else{
       showSnackBar("Review Added Successfully.");
@@ -268,6 +258,7 @@ saveNewReview = () => {
   document.getElementById("review-user-rating").selected = "5";
   document.getElementById("review-user-text").value = "";
 }
+//----------- Additional Method For Reviews ----------- END -----------//
 
 /**
  * Show Snackbar to User for Notification
@@ -282,5 +273,26 @@ saveNewReview = () => {
       }, 3000);
  }
 
+//----------- Additional Method For Favorite ----------- START -----------//
 
-//----------- Additional Method For Reviews ----------- END -----------//
+/**
+ * mark as favorite restaurant
+ * Called From Favorite Button
+ */
+markAsFavoriteRestaurant = () => {
+
+  //Get Current Value
+  //// TODO: Get details and Change CSS according
+  self.restaurant["is_favorite"] = true;
+  DBHelper.markRestaurantFavorite(self.restaurant, (error, response) => {
+    if (error) {
+      showSnackBar("Internet Connection not found. \n"+
+        "Review Added to local storage and will be sync once connected .");
+        DBHelper.enableBackgroundSync();
+    }
+    else{
+      showSnackBar("Restaurant marked as Favorite.");
+    }
+  });//End-markRestaurantFavorite
+}
+//----------- Additional Method For Favorite ----------- END -----------//
