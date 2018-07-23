@@ -8,6 +8,5 @@ gulp.task('server', () => {
     connect.server({
         root: 'dist',
         port: 8000,
-        livereload: true
     })
 });
