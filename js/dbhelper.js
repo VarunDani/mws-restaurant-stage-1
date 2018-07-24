@@ -368,6 +368,15 @@ class DBHelper {
            let transaction = db.transaction('reviews_mst', 'readwrite');
            let reviewStore = transaction.objectStore('reviews_mst');
            allReviews.forEach(rev => reviewStore.put(rev));
+           transaction.complete;
+
+           let tx = db.transaction('pending_review_transactions', 'readwrite');
+           let pendingReviews = tx.objectStore('pending_review_transactions');
+           pendingReviews.getAll().then(allPendingReviews => {
+               allPendingReviews.forEach(pRev => {if(pRev.restaurant_id==id)allReviews.push(pRev);});
+             }).catch((err) => {console.log(err);});
+           tx.complete;
+           
          });
          callback(null, allReviews);
        })

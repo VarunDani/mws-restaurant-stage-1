@@ -33,6 +33,7 @@
 
 
 ### How to run
+Download/Clone Server From https://github.com/udacity/mws-restaurant-stage-3 and follow instrucctions to start.
 Execute Following Command to build with gulp and start server. Execute http://localhost:8000/ to access restaurant App.
 
     npm install
