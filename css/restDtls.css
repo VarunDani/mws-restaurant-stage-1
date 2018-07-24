@@ -17,7 +17,6 @@
 .inside #footer {
   bottom: 0;
   /*position: absolute;*/
-  width: 100%;
 }
 #restaurant-name {
   color: #c46a03;
@@ -46,20 +45,24 @@
   font-weight: 300;
   letter-spacing: 10px;
   margin: 0 0 20px;
-  padding: 2px 0;
+  padding: 11px 0;
   text-align: center;
   text-transform: uppercase;
 	width: 100%;
 }
-#restaurant-container, #reviews-container {
+#restaurant-container,
+#reviews-container,
+#add-review-form {
   border-bottom: 1px solid #d9d9d9;
   border-top: 1px solid #fff;
   padding: 0px 10px 10px;
+  text-align: center;
 }
 /*#reviews-container {
   padding: 30px 40px 80px;
 }*/
-#reviews-container h2 {
+#reviews-container h2,
+#add-review-form h2 {
   color: #c46a03;
   font-size: 24pt;
   font-weight: 300;
@@ -119,8 +122,14 @@
 
 #snackbar.show {
     visibility: visible;
-    -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
-    animation: fadein 0.5s, fadeout 0.5s 2.5s;
+    -webkit-animation: fadein 0.5s, fadeout 0.5s 3.5s;
+    animation: fadein 0.5s, fadeout 0.5s 3.5s;
+}
+
+#snackBarSection {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 @-webkit-keyframes fadein {
@@ -144,9 +153,113 @@
 }
 
 
-/* -----------------------Style For Add Review Form ----------TODO----------------*/
+/* -----------------------Style For Add Review Form --------------------------*/
+/*Reference: https://www.w3schools.com/howto/tryit.asp?filename=tryhow_css_responsive_form*/
 
+input[type=text], select, textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    resize: vertical;
+}
 
+label {
+    padding: 12px 12px 12px 0;
+    display: inline-block;
+}
 
+input[type=submit] {
+    background-color: #4CAF50;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    float: right;
+}
 
-/* -----------------------Style For Favourite Button ----------TODO---------------*/
+input[type=submit]:hover {
+    background-color: #45a049;
+}
+
+.container {
+    border-radius: 5px;
+    background-color: #f2f2f2;
+    padding: 20px;
+}
+
+.col-25 {
+    float: left;
+    width: 25%;
+    margin-top: 6px;
+}
+
+.col-75 {
+    float: left;
+    width: 75%;
+    margin-top: 6px;
+}
+
+/* Clear floats after the columns */
+.row:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+.formButton {
+  background-color: #724702;
+  border: 3px solid #eee;
+  color: #fff;
+  font-size: 12pt;
+  margin: 15px 0 0;
+  padding: 8px 30px 10px;
+  text-align: center;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+@media screen and (max-width: 600px) {
+    .col-25, .col-75, input[type=submit] {
+        width: 100%;
+        margin-top: 0;
+    }
+}
+
+/* -----------------------Style For Favourite Button -------------------------*/
+/* https://www.w3schools.com/howto/tryit.asp?filename=tryhow_css_outline_buttons*/
+
+.btnFav {
+  border: 2px solid black;
+  background-color: #f3f3f3;
+  color: black;
+  padding: 14px 28px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  width: 90%;
+  border-radius: 5px;
+}v
+
+/* Green */
+.successFav {
+  border-color: #4CAF50;
+  color: green;
+}
+
+.successFav:hover {
+  background-color: #4CAF50;
+  color: white;
+}
+
+#favorite-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.selectedFavButton {
+  background-color: #4CAF50;
+  color: white;
+}

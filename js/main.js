@@ -9,7 +9,7 @@ var markers = []
  */
 document.addEventListener('DOMContentLoaded', (event) => {
   fetchNeighborhoods();
-  fetchCuisines();
+  //fetchCuisines();
   loadServiceWorker();
 });
 
@@ -44,6 +44,7 @@ fetchNeighborhoods = () => {
     } else {
       self.neighborhoods = neighborhoods;
       fillNeighborhoodsHTML();
+      fetchCuisines();
     }
   });
 }

@@ -81,6 +81,9 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
   if (restaurant.operating_hours) {
     fillRestaurantHoursHTML();
   }
+
+  //Crafting Favorite Button
+  setFavHTML();
 }
 
 /**
@@ -270,7 +273,7 @@ saveNewReview = () => {
      msg.className = "show";
      setTimeout(function(){
         msg.className = msg.className.replace("show", "");
-      }, 3000);
+      }, 4000);
  }
 
 //----------- Additional Method For Favorite ----------- START -----------//
@@ -282,17 +285,42 @@ saveNewReview = () => {
 markAsFavoriteRestaurant = () => {
 
   //Get Current Value
-  //// TODO: Get details and Change CSS according
-  self.restaurant["is_favorite"] = true;
+  self.restaurant.is_favorite = !self.restaurant.is_favorite;
+  self.restaurant["is_favorite"] = self.restaurant.is_favorite;
   DBHelper.markRestaurantFavorite(self.restaurant, (error, response) => {
     if (error) {
       showSnackBar("Internet Connection not found. \n"+
-        "Review Added to local storage and will be sync once connected .");
+        "Favorite details will be sync once connected.");
         DBHelper.enableBackgroundSync();
     }
     else{
-      showSnackBar("Restaurant marked as Favorite.");
+      if(self.restaurant.is_favorite===true || self.restaurant.is_favorite==="true"){
+        showSnackBar("Restaurant marked as Favorite.");
+      }
+      else{
+        showSnackBar("Restaurant removed from Favorite.");
+      }
+
     }
+    setFavHTML();
   });//End-markRestaurantFavorite
+}
+
+
+/**
+ * Crafting Favorite Button after Changing query
+ */
+setFavHTML = () => {
+  const favButton = document.getElementById("mark-favorite");
+  if(self.restaurant.is_favorite===true || self.restaurant.is_favorite==="true"){
+    favButton.innerHTML = '<font size="5"> &#x2764; </font> &nbsp; This is your Favorite Restaurant';
+    favButton.classList.remove("successFav");
+    favButton.classList.add("selectedFavButton");
+  }
+  else{
+    favButton.innerHTML = '<font size="5"> &#x2661; </font> &nbsp; Set Restaurant as Favorite';
+    favButton.classList.remove("selectedFavButton");
+    favButton.classList.add("successFav");
+  }
 }
 //----------- Additional Method For Favorite ----------- END -----------//

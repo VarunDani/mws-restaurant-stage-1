@@ -66,8 +66,8 @@
 
     <!-- end restaurant -->
     <section id="favorite-container">
-      <button id="mark-favorite" tabindex="0" class="" onclick="markAsFavoriteRestaurant()"
-        aria-label="Make this restaurant as your favourite">Set as favorite</button>
+      <button id="mark-favorite" tabindex="0" class="btnFav successFav" onclick="markAsFavoriteRestaurant()"
+        aria-label="Make this restaurant as your favourite"><font size="5"> &#x2661; </font> &nbsp; Set Restaurant as Favorite</button>
     </section>
 
     <!-- Beginning reviews -->
@@ -75,37 +75,40 @@
       <ul id="reviews-list"></ul>
     </section>
 
-    <section>
-      <h4>Add New Review</h4>
+    <section id="add-review-form">
+      <h2>Add New Review</h2>
+      <div class="container">
       <form >
-        <div>
-          <label for="review-user-name">Name:</label>
-          <input name="review-user-name" id="review-user-name" placeholder="Enter Your Name" required>
+        <div class="row">
+          <div class="col-25"><label for="review-user-name">Name:</label></div>
+          <div class="col-75"><input type="text" name="review-user-name" id="review-user-name" placeholder="Enter Your Name" required></div>
         </div>
-        <div>
-          <label for="review-user-rating">Rating:</label>
-          <select id="review-user-rating" name="review-user-rating">
+        <div class="row">
+          <div class="col-25"><label for="review-user-rating">Rating:</label></div>
+          <div class="col-75"><select id="review-user-rating" name="review-user-rating">
             <option value="1">1</option>
             <option value="2">2</option>
             <option value="3">3</option>
             <option value="4">4</option>
             <option value="5" selected>5</option>
-          </select>
+          </select></div>
         </div>
-        <div>
-          <label for="review-user-text">Your review:</label>
-          <textarea name="review-user-text" id="review-user-text" placeholder="Enter Your Review" required></textarea>
+        <div class="row">
+          <div class="col-25"><label for="review-user-text">Your review:</label></div>
+          <div class="col-75"><textarea name="review-user-text" id="review-user-text" placeholder="Enter Your Review" required></textarea></div>
         </div>
       </form>
-      <button onclick="saveNewReview()">Add Review</button>
+      <div class="row"><button class="formButton" onclick="saveNewReview()">Add Review</button></div>
+      </div>
     </section>
     <!-- End reviews -->
+
+    <!-- Snackbar For Notification Purpose -->
+    <!-- Reference: https://www.w3schools.com/howto/howto_js_snackbar.asp -->
+    <section id="snackBarSection"> <div id="snackbar">Text Message here..</div> </section>
+
   </main>
   <!-- End main -->
-
-  <!-- Snackbar For Notification Purpose -->
-  <!-- Reference: https://www.w3schools.com/howto/howto_js_snackbar.asp -->
-  <div id="snackbar">Text Message here..</div>
 
   <!-- Beginning footer -->
   <footer id="footer">

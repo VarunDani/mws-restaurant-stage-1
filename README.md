@@ -7,15 +7,33 @@
 
 ### Features Covered
 
+**Part-1** 	&#10004;
+
+ - Make Site UI compatible with a range of display sizes
+ - Made All Images Responsive
+ - Make Elements visible and usable in viewport
+ - Accessibility: Make all element's focus according to accessibility guidelines
+ - Accessibility: All site elements defined Semantically
+ - Make pages available Offline
+
+**Part-2** &#10004;
+
  - Addition of Manifest File
  - Fetch JSON from Server  
  - Store JSON to IndexedDB for offline purpose
  - Improve Performance, PWA, Accessibility measures
+ - Preserved Responsiveness and Accessibility.
+
+**Part-3**
+
  - Added Reviews Form (Works offline and Sync on Network Connection)
  - Can Mark Restaurant Favorite (Works offline and Sync on Network Connection)
+ - Performance, Accessibility and PWA measures >90
+ - Preserved Responsiveness and Accessibility.
+
 
 ### How to run
-Execute Following Command to build with gulpand start server. Execute http://localhost:8000/ to access restaurant App.
+Execute Following Command to build with gulp and start server. Execute http://localhost:8000/ to access restaurant App.
 
     npm install
     gulp
@@ -42,3 +60,6 @@ To generate responsive Images use Grunt File and grunt Command for generating so
  - Snack Bar reference Code For Notification ([W3School](https://www.w3schools.com/howto/howto_js_snackbar.asp))
  - IDB Code Help ([IDBPromise](https://github.com/jakearchibald/idb))
  - Website Sync Article (Great Examples!) ([WICG](https://github.com/WICG/BackgroundSync/blob/master/explainer.md))
+ - Uglify JS ([UglifyJS3](https://skalman.github.io/UglifyJS-online/))
+ - Minify CSS ([MinifyCSS](https://www.minifier.org/))
+ - Reference for Map Overlay on hover ([Ref](https://stackoverflow.com/questions/21086385/how-to-make-in-css-an-overlay-over-an-image))
